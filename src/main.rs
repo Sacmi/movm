@@ -1,11 +1,15 @@
+use crate::cli::Cli;
 use crate::inst::{Inst, InstType};
 use crate::vm::VM;
 
 mod stack;
 mod inst;
 mod vm;
+mod cli;
 
 fn main() {
+    // let cli = Cli::new();
+
     let mut vm = VM::new();
 
     // let program_vec = vec![
