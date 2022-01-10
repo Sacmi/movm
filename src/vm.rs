@@ -1,6 +1,7 @@
-use std::fs::File;
 use std::{fs, io};
+use std::fs::File;
 use std::io::{Read, Write};
+
 use crate::inst::{div, dump, dup, Inst, InstError, InstType, jmp, minus, mp, plus, push};
 use crate::stack::{Stack, Word};
 
@@ -44,9 +45,9 @@ impl VM {
 
     fn handle_error(&mut self, err: InstError, typ: &InstType, op: Word) {
         self.halt = true;
-        println!("{}: {}", err.kind, err);
+        println!("\x1b[31m{}\x1b[0m: {}", err.kind, err);
         self.stack.dump();
-        println!("Instruction with error:");
+        println!("\x1b[93mInstruction with error:\x1b[0m");
         println!("{} |    {} {}", self.current_ip, typ, op);
     }
 
