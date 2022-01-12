@@ -11,6 +11,14 @@ path = "src/movm/main.rs"
 name = "runner"
 path = "src/runner/main.rs"
 
+[[bin]]
+name = "assembler"
+path = "src/asm/main.rs"
+
+[[bin]]
+name = "disassembler"
+path = "src/disasm/main.rs"
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
