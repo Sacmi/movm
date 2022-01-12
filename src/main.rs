@@ -1,5 +1,3 @@
-use crate::cli::Cli;
-use crate::inst::{Inst, InstType};
 use crate::vm::VM;
 
 mod stack;

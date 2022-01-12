@@ -1,7 +1,9 @@
 use std::fmt;
+
+use serde::{Deserialize, Serialize};
+
 use crate::stack::{Stack, Word};
 use crate::VM;
-use serde::{Serialize, Deserialize};
 
 #[derive(Debug, PartialEq)]
 pub enum InstErrorKind {
@@ -18,10 +20,6 @@ pub struct InstError {
 }
 
 impl InstError {
-    pub fn kind(&self) -> &InstErrorKind {
-        &self.kind
-    }
-
     pub fn __description(&self) -> &str {
         match self.kind {
             InstErrorKind::NotEnoughOperands => "not enough operands at stack",
