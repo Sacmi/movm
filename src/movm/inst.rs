@@ -1,7 +1,7 @@
 use std::fmt;
 
 use crate::stack::{Stack, Word};
-use crate::VM;
+use crate::vm::VM;
 
 #[derive(Debug, PartialEq)]
 pub enum InstErrorKind {
