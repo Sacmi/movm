@@ -1,11 +1,10 @@
-use crate::cli::Cli;
-use crate::inst::{Inst, InstType};
 use crate::vm::VM;
 
 mod stack;
 mod inst;
 mod vm;
 mod cli;
+mod loader;
 
 fn main() {
     // let cli = Cli::new();
@@ -21,8 +20,8 @@ fn main() {
     //     Inst { typ: InstType::JMP,  op: 2 }    // 5
     // ];
 
-    let loaded_program = VM::load_program("examples/fibonacci.bin");
-    // VM::dump_program("fibonacci.bin", program_vec);
+    // loader::dump_program("examples/fibonacci.mobc", &program_vec);
+    let loaded_program = loader::load_program("examples/fibonacci.mobc");
 
     vm.execute_program(loaded_program);
 }

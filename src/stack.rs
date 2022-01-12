@@ -17,10 +17,6 @@ pub struct StackError {
 }
 
 impl StackError {
-    pub fn kind(&self) -> &StackErrorKind {
-        &self.kind
-    }
-
     pub fn __description(&self) -> &str {
         match self.kind {
             StackErrorKind::Overflow => "stack is full",

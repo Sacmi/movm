@@ -1,7 +1,3 @@
-use std::{fs, io};
-use std::fs::File;
-use std::io::{Read, Write};
-
 use crate::inst::{div, dump, dup, Inst, InstError, InstType, jmp, minus, mp, plus, push};
 use crate::stack::{Stack, Word};
 
@@ -102,25 +98,5 @@ impl VM {
         }
 
         self.total_ip = 0;
-    }
-
-    pub fn dump_program(path: &str, program_vec: Vec<Inst>) -> Result<(), io::Error> {
-        match bincode::serialize(&program_vec) {
-            Ok(bytes) => {
-                let mut file = File::create(path)?;
-                file.write_all(&bytes)?;
-                Ok(())
-            }
-            Err(error) => panic!("ERROR: unable serialize to bytes ({})", error)
-        }
-    }
-
-    pub fn load_program(path: &str) -> Vec<Inst> {
-        let mut f = File::open(&path).expect("no file found");
-        let metadata = fs::metadata(&path).expect("unable to read metadata");
-        let mut buffer = vec![0; metadata.len() as usize];
-        f.read(&mut buffer).expect("buffer overflow");
-
-        bincode::deserialize(&buffer[..]).expect("unable to serialize")
     }
 }
