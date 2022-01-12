@@ -1,7 +1,5 @@
 use std::fmt;
 
-use serde::{Deserialize, Serialize};
-
 use crate::stack::{Stack, Word};
 use crate::VM;
 
@@ -37,7 +35,7 @@ impl fmt::Display for InstError {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Debug, Copy, Clone)]
 pub enum InstType {
     PUSH,
     PLUS,
@@ -61,7 +59,7 @@ impl fmt::Display for InstErrorKind {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Inst {
     pub typ: InstType,
     pub op: Word,
