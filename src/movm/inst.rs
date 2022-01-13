@@ -24,7 +24,7 @@ impl InstError {
             InstErrorKind::DivisionByZero => "tried divide by zero",
             InstErrorKind::StackOverflow => "stack is full",
             InstErrorKind::IllegalPointer => "illegal pointer position",
-            InstErrorKind::IndexOutOfRange => "index out of range"
+            InstErrorKind::IndexOutOfRange => "index out of range",
         }
     }
 }
@@ -68,7 +68,9 @@ pub struct Inst {
 macro_rules! check_operands {
     ($a:expr, $b:expr) => {
         if $a.get_size() < $b {
-            return Err(InstError { kind: InstErrorKind::NotEnoughOperands });
+            return Err(InstError {
+                kind: InstErrorKind::NotEnoughOperands,
+            });
         }
     };
 }
@@ -79,7 +81,9 @@ pub fn push(stack: &mut Stack, op: Word) -> Result<(), InstError> {
     if res.is_ok() {
         Ok(())
     } else {
-        Err(InstError { kind: InstErrorKind::StackOverflow })
+        Err(InstError {
+            kind: InstErrorKind::StackOverflow,
+        })
     }
 }
 
@@ -123,7 +127,9 @@ pub fn div(stack: &mut Stack) -> Result<(), InstError> {
     let b = stack.pop().unwrap();
 
     if b == 0 {
-        return Err(InstError { kind: InstErrorKind::DivisionByZero });
+        return Err(InstError {
+            kind: InstErrorKind::DivisionByZero,
+        });
     }
 
     stack.push(a / b).unwrap();
@@ -137,7 +143,9 @@ pub fn dump(stack: &mut Stack) -> Result<(), InstError> {
 
 pub fn jmp(vm: &mut VM, op: Word) -> Result<(), InstError> {
     if op > vm.get_program_length() as Word || op < 0 {
-        return Err(InstError { kind: InstErrorKind::IllegalPointer });
+        return Err(InstError {
+            kind: InstErrorKind::IllegalPointer,
+        });
     }
 
     vm.set_inst_pointer(op as usize);
@@ -147,14 +155,18 @@ pub fn jmp(vm: &mut VM, op: Word) -> Result<(), InstError> {
 
 pub fn dup(stack: &mut Stack, op: Word) -> Result<(), InstError> {
     if op >= stack.get_size() as Word || op < 0 {
-        return Err(InstError { kind: InstErrorKind::IndexOutOfRange });
+        return Err(InstError {
+            kind: InstErrorKind::IndexOutOfRange,
+        });
     }
 
     let duplicate = stack.at(stack.get_size() - 1 - (op as usize)).unwrap();
     let res = stack.push(duplicate);
 
     if res.is_err() {
-        Err(InstError { kind: InstErrorKind::StackOverflow })
+        Err(InstError {
+            kind: InstErrorKind::StackOverflow,
+        })
     } else {
         Ok(())
     }
@@ -192,7 +204,12 @@ mod tests {
         let mut stack = Stack::new();
         let err = plus(&mut stack);
 
-        assert_eq!(err.unwrap_err(), InstError { kind: InstErrorKind::NotEnoughOperands })
+        assert_eq!(
+            err.unwrap_err(),
+            InstError {
+                kind: InstErrorKind::NotEnoughOperands
+            }
+        )
     }
 
     #[test]
@@ -239,6 +256,11 @@ mod tests {
 
         let err = div(&mut stack).unwrap_err();
 
-        assert_eq!(err, InstError { kind: InstErrorKind::DivisionByZero })
+        assert_eq!(
+            err,
+            InstError {
+                kind: InstErrorKind::DivisionByZero
+            }
+        )
     }
 }

@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use std::process::exit;
 
 pub struct Cli {
-    path: PathBuf
+    path: PathBuf,
 }
 
 impl Cli {
@@ -16,9 +16,7 @@ impl Cli {
             exit(1);
         }
 
-        Cli {
-            path: pathbuf
-        }
+        Cli { path: pathbuf }
     }
 
     pub fn get_path(&self) -> &PathBuf {

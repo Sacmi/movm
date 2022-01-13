@@ -8,7 +8,7 @@ pub type Word = isize;
 pub enum StackErrorKind {
     Overflow,
     Underflow,
-    Index
+    Index,
 }
 
 #[derive(Debug, PartialEq)]
@@ -21,7 +21,7 @@ impl StackError {
         match self.kind {
             StackErrorKind::Overflow => "stack is full",
             StackErrorKind::Underflow => "stack is empty",
-            StackErrorKind::Index => "index out of range"
+            StackErrorKind::Index => "index out of range",
         }
     }
 }
@@ -41,13 +41,15 @@ impl Stack {
     pub fn new() -> Stack {
         Stack {
             stack: [0; STACK_MAX_SIZE],
-            current_size: 0
+            current_size: 0,
         }
     }
 
     pub fn at(&self, index: usize) -> Result<Word, StackError> {
         if index >= self.current_size {
-            Err(StackError {kind: StackErrorKind::Index})
+            Err(StackError {
+                kind: StackErrorKind::Index,
+            })
         } else {
             Ok(self.stack[index])
         }
@@ -55,7 +57,9 @@ impl Stack {
 
     pub fn push(&mut self, value: Word) -> Result<(), StackError> {
         if self.current_size == STACK_MAX_SIZE {
-            return Err(StackError { kind: StackErrorKind::Overflow });
+            return Err(StackError {
+                kind: StackErrorKind::Overflow,
+            });
         }
 
         self.stack[self.current_size] = value;
@@ -66,7 +70,9 @@ impl Stack {
 
     pub fn pop(&mut self) -> Result<Word, StackError> {
         if self.current_size == 0 {
-            return Err(StackError { kind: StackErrorKind::Underflow });
+            return Err(StackError {
+                kind: StackErrorKind::Underflow,
+            });
         }
 
         self.current_size -= 1;
@@ -137,7 +143,12 @@ mod tests {
         }
 
         let err = stack.push(1);
-        assert_eq!(err.unwrap_err(), StackError { kind: StackErrorKind::Overflow })
+        assert_eq!(
+            err.unwrap_err(),
+            StackError {
+                kind: StackErrorKind::Overflow
+            }
+        )
     }
 
     #[test]
@@ -145,6 +156,11 @@ mod tests {
         let mut stack = Stack::new();
         let err = stack.pop();
 
-        assert_eq!(err.unwrap_err(), StackError { kind: StackErrorKind::Underflow })
+        assert_eq!(
+            err.unwrap_err(),
+            StackError {
+                kind: StackErrorKind::Underflow
+            }
+        )
     }
 }

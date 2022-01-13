@@ -36,5 +36,6 @@ pub fn dump_program(path: &str, program_vec: &Vec<Inst>) {
     let bytes = unsafe { inst_to_bytes(slice) };
 
     let mut file = File::create(path).expect("Error: unable to create file.");
-    file.write_all(bytes).expect("Error: Unable dump program to file.");
+    file.write_all(bytes)
+        .expect("Error: Unable dump program to file.");
 }

@@ -1,5 +1,6 @@
 use movm::loader::load_program;
 use movm::vm::VM;
+
 use crate::cli::Cli;
 
 mod cli;
