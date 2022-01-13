@@ -65,6 +65,15 @@ pub struct Inst {
     pub op: Word,
 }
 
+impl Inst {
+    pub fn is_required_op(&self) -> bool {
+        match self.typ {
+            InstType::PUSH | InstType::JMP | InstType::DUP => true,
+            _ => false,
+        }
+    }
+}
+
 macro_rules! check_operands {
     ($a:expr, $b:expr) => {
         if $a.get_size() < $b {
