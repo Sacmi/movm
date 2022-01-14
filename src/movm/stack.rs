@@ -1,8 +1,7 @@
+use crate::word::Word;
 use std::fmt;
 
 pub const STACK_MAX_SIZE: usize = 90;
-
-pub type Word = isize;
 
 #[derive(Debug, PartialEq)]
 pub enum StackErrorKind {
