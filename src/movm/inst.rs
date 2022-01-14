@@ -11,6 +11,7 @@ pub enum InstErrorKind {
     StackOverflow,
     IllegalPointer,
     IndexOutOfRange,
+    Overflow,
 }
 
 #[derive(Debug, PartialEq)]
@@ -26,6 +27,7 @@ impl InstError {
             InstErrorKind::StackOverflow => "stack is full",
             InstErrorKind::IllegalPointer => "illegal pointer position",
             InstErrorKind::IndexOutOfRange => "index out of range",
+            InstErrorKind::Overflow => "variable is overflowing",
         }
     }
 }
@@ -103,6 +105,13 @@ pub fn plus(stack: &mut Stack) -> Result<(), InstError> {
     let a = stack.pop().unwrap().get_as_i64();
     let b = stack.pop().unwrap().get_as_i64();
 
+    let overflow = a.checked_add(b);
+    if overflow.is_none() {
+        return Err(InstError {
+            kind: InstErrorKind::Overflow,
+        });
+    }
+
     stack.push(Word::new_i64(a + b)).unwrap();
 
     Ok(())
@@ -125,6 +134,13 @@ pub fn mp(stack: &mut Stack) -> Result<(), InstError> {
     let a = stack.pop().unwrap().get_as_i64();
     let b = stack.pop().unwrap().get_as_i64();
 
+    let overflow = a.checked_mul(b);
+    if overflow.is_none() {
+        return Err(InstError {
+            kind: InstErrorKind::Overflow,
+        });
+    }
+
     stack.push(Word::new_i64(a * b)).unwrap();
 
     Ok(())
@@ -139,6 +155,13 @@ pub fn div(stack: &mut Stack) -> Result<(), InstError> {
     if b == 0 {
         return Err(InstError {
             kind: InstErrorKind::DivisionByZero,
+        });
+    }
+
+    let overflow = a.checked_div(b);
+    if overflow.is_none() {
+        return Err(InstError {
+            kind: InstErrorKind::Overflow,
         });
     }
 
