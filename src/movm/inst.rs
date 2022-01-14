@@ -1,7 +1,8 @@
 use std::fmt;
 
-use crate::stack::{Stack, Word};
+use crate::stack::Stack;
 use crate::vm::VM;
+use crate::word::Word;
 
 #[derive(Debug, PartialEq)]
 pub enum InstErrorKind {
@@ -47,6 +48,15 @@ pub enum InstType {
     DUP,
 }
 
+impl InstType {
+    pub fn is_required_op(&self) -> bool {
+        match self {
+            InstType::PUSH | InstType::JMP | InstType::DUP => true,
+            _ => false,
+        }
+    }
+}
+
 impl fmt::Display for InstType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{:?}", self)
@@ -63,15 +73,6 @@ impl fmt::Display for InstErrorKind {
 pub struct Inst {
     pub typ: InstType,
     pub op: Word,
-}
-
-impl Inst {
-    pub fn is_required_op(&self) -> bool {
-        match self.typ {
-            InstType::PUSH | InstType::JMP | InstType::DUP => true,
-            _ => false,
-        }
-    }
 }
 
 macro_rules! check_operands {
