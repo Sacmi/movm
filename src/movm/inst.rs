@@ -11,6 +11,7 @@ pub enum InstErrorKind {
     StackOverflow,
     IllegalPointer,
     IndexOutOfRange,
+    Overflow,
 }
 
 #[derive(Debug, PartialEq)]
@@ -26,6 +27,7 @@ impl InstError {
             InstErrorKind::StackOverflow => "stack is full",
             InstErrorKind::IllegalPointer => "illegal pointer position",
             InstErrorKind::IndexOutOfRange => "index out of range",
+            InstErrorKind::Overflow => "variable is overflowing",
         }
     }
 }
@@ -50,10 +52,7 @@ pub enum InstType {
 
 impl InstType {
     pub fn is_required_op(&self) -> bool {
-        match self {
-            InstType::PUSH | InstType::JMP | InstType::DUP => true,
-            _ => false,
-        }
+        matches!(self, InstType::PUSH | InstType::JMP | InstType::DUP)
     }
 }
 
@@ -73,6 +72,19 @@ impl fmt::Display for InstErrorKind {
 pub struct Inst {
     pub typ: InstType,
     pub op: Word,
+}
+
+macro_rules! check_overflow {
+    ($overflow:expr, $a:expr, $b:expr, $stack:expr) => {
+        if $overflow.is_none() {
+            $stack.push(Word::new_i64($b)).unwrap();
+            $stack.push(Word::new_i64($a)).unwrap();
+
+            return Err(InstError {
+                kind: InstErrorKind::Overflow,
+            });
+        }
+    };
 }
 
 macro_rules! check_operands {
@@ -103,6 +115,9 @@ pub fn plus(stack: &mut Stack) -> Result<(), InstError> {
     let a = stack.pop().unwrap().get_as_i64();
     let b = stack.pop().unwrap().get_as_i64();
 
+    let overflow = a.checked_add(b);
+    check_overflow!(overflow, a, b, stack);
+
     stack.push(Word::new_i64(a + b)).unwrap();
 
     Ok(())
@@ -125,6 +140,9 @@ pub fn mp(stack: &mut Stack) -> Result<(), InstError> {
     let a = stack.pop().unwrap().get_as_i64();
     let b = stack.pop().unwrap().get_as_i64();
 
+    let overflow = a.checked_mul(b);
+    check_overflow!(overflow, a, b, stack);
+
     stack.push(Word::new_i64(a * b)).unwrap();
 
     Ok(())
@@ -141,6 +159,9 @@ pub fn div(stack: &mut Stack) -> Result<(), InstError> {
             kind: InstErrorKind::DivisionByZero,
         });
     }
+
+    let overflow = a.checked_div(b);
+    check_overflow!(overflow, a, b, stack);
 
     stack.push(Word::new_i64(a / b)).unwrap();
     Ok(())
@@ -272,6 +293,30 @@ mod tests {
             err,
             InstError {
                 kind: InstErrorKind::DivisionByZero
+            }
+        )
+    }
+
+    #[test]
+    fn check_overflow() {
+        let mut stack = Stack::new();
+        stack.push(Word::new_i64(i64::MAX)).unwrap();
+        stack.push(Word::new_i64(2)).unwrap();
+
+        let plus_err = plus(&mut stack).unwrap_err();
+        let mp_err = mp(&mut stack).unwrap_err();
+
+        assert_eq!(
+            plus_err,
+            InstError {
+                kind: InstErrorKind::Overflow
+            }
+        );
+
+        assert_eq!(
+            mp_err,
+            InstError {
+                kind: InstErrorKind::Overflow
             }
         )
     }

@@ -42,10 +42,6 @@ impl PartialEq for Word {
     fn eq(&self, other: &Self) -> bool {
         unsafe { self.as_u64 == other.as_u64 }
     }
-
-    fn ne(&self, other: &Self) -> bool {
-        unsafe { self.as_u64 != other.as_u64 }
-    }
 }
 
 impl fmt::Debug for Word {

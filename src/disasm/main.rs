@@ -28,9 +28,7 @@ fn main() {
     let program = loader::load_program(path);
     let spaces = get_space_count(&program.len());
 
-    for i in 0..program.len() {
-        let inst = program[i];
-
+    for (i, inst) in program.iter().enumerate() {
         print!(
             "{:>space$} | \x1b[31m{}\x1b[0m",
             i,

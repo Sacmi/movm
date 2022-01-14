@@ -18,11 +18,11 @@ pub fn get_inst_from_line(line: &str) -> Inst {
 
     let mut split = line.trim().split_whitespace();
     let typ_str = split
-        .nth(0)
+        .next()
         .expect("unable to get type of instruction in line");
 
     let typ = get_inst_type_from_str(typ_str);
-    let mut op: Word = Word { as_u64: 0 };
+    let mut op: Word = Word::new_u64(0);
 
     if typ.is_required_op() {
         let op_str = split
@@ -30,24 +30,22 @@ pub fn get_inst_from_line(line: &str) -> Inst {
             .expect("unable to get operand of instruction in line")
             .to_string();
 
-        if op_str.contains(".") {
+        if op_str.contains('.') {
             let op_f64 = op_str
                 .parse::<f64>()
                 .expect("unable to parse this operand as float");
 
-            op = Word { as_f64: op_f64 };
+            op = Word::new_f64(op_f64);
         } else {
             let op_i64 = op_str.parse::<i64>();
 
-            if !op_i64.is_err() {
-                op = Word {
-                    as_i64: op_i64.unwrap(),
-                };
+            if let Ok(op_ok) = op_i64 {
+                op = Word::new_i64(op_ok);
             } else {
                 let op_u64 = op_str
                     .parse::<u64>()
                     .expect("unable to parse operand as u64");
-                op = Word { as_u64: op_u64 }
+                op = Word::new_u64(op_u64)
             }
         }
     }

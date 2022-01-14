@@ -23,7 +23,8 @@ pub fn load_program(path: &str) -> Vec<Inst> {
     let mut file = File::open(&path).expect("Error: Unable to open file");
     let metadata = metadata(&path).expect("Error: Unable to read metadata");
     let mut buffer = vec![0; metadata.len() as usize];
-    file.read(&mut buffer).expect("Error: Buffer overflow");
+    file.read_exact(&mut buffer)
+        .expect("Error: Buffer overflow");
 
     let slice = buffer.as_slice();
     let program = unsafe { bytes_to_inst(slice) };
@@ -31,9 +32,8 @@ pub fn load_program(path: &str) -> Vec<Inst> {
     program.to_vec()
 }
 
-pub fn dump_program(path: &str, program_vec: &Vec<Inst>) {
-    let slice = program_vec.as_slice();
-    let bytes = unsafe { inst_to_bytes(slice) };
+pub fn dump_program(path: &str, program_vec: &[Inst]) {
+    let bytes = unsafe { inst_to_bytes(program_vec) };
 
     let mut file = File::create(path).expect("Error: unable to create file.");
     file.write_all(bytes)

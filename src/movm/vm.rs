@@ -84,8 +84,8 @@ impl VM {
             }
         }
 
-        if res.is_err() {
-            self.handle_error(res.unwrap_err(), &inst.typ, inst.op);
+        if let Err(err) = res {
+            self.handle_error(err, &inst.typ, inst.op);
         }
 
         self.current_ip += 1;
@@ -99,5 +99,11 @@ impl VM {
         }
 
         self.total_ip = 0;
+    }
+}
+
+impl Default for VM {
+    fn default() -> Self {
+        VM::new()
     }
 }
