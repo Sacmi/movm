@@ -192,23 +192,23 @@ mod tests {
     fn push_test() {
         let mut stack = Stack::new();
 
-        push(&mut stack, 69).unwrap();
+        push(&mut stack, Word::new_i64(69)).unwrap();
 
         assert_eq!(stack.get_size(), 1);
-        assert_eq!(stack.pop().unwrap(), 69);
+        assert_eq!(stack.pop().unwrap().get_as_i64(), 69);
     }
 
     #[test]
     fn plus_test() {
         let mut stack = Stack::new();
 
-        stack.push(15).unwrap();
-        stack.push(20).unwrap();
+        stack.push(Word::new_i64(15)).unwrap();
+        stack.push(Word::new_i64(20)).unwrap();
 
         plus(&mut stack).unwrap();
 
         assert_eq!(stack.get_size(), 1);
-        assert_eq!(stack.pop().unwrap(), 35);
+        assert_eq!(stack.pop().unwrap().get_as_i64(), 35);
     }
 
     #[test]
@@ -227,44 +227,44 @@ mod tests {
     #[test]
     fn minus_test() {
         let mut stack = Stack::new();
-        stack.push(4).unwrap();
-        stack.push(12).unwrap();
+        stack.push(Word::new_i64(4)).unwrap();
+        stack.push(Word::new_i64(12)).unwrap();
 
         minus(&mut stack).unwrap();
 
         assert_eq!(stack.get_size(), 1);
-        assert_eq!(stack.pop().unwrap(), 8);
+        assert_eq!(stack.pop().unwrap().get_as_i64(), 8);
     }
 
     #[test]
     fn mp_test() {
         let mut stack = Stack::new();
-        stack.push(6).unwrap();
-        stack.push(-8).unwrap();
+        stack.push(Word::new_i64(6)).unwrap();
+        stack.push(Word::new_i64(-8)).unwrap();
 
         mp(&mut stack).unwrap();
 
         assert_eq!(stack.get_size(), 1);
-        assert_eq!(stack.pop().unwrap(), -48);
+        assert_eq!(stack.pop().unwrap().get_as_i64(), -48);
     }
 
     #[test]
     fn div_test() {
         let mut stack = Stack::new();
-        stack.push(7).unwrap();
-        stack.push(14).unwrap();
+        stack.push(Word::new_i64(7)).unwrap();
+        stack.push(Word::new_i64(14)).unwrap();
 
         div(&mut stack).unwrap();
 
         assert_eq!(stack.get_size(), 1);
-        assert_eq!(stack.pop().unwrap(), 2);
+        assert_eq!(stack.pop().unwrap().get_as_i64(), 2);
     }
 
     #[test]
     fn div_by_zero() {
         let mut stack = Stack::new();
-        stack.push(0).unwrap();
-        stack.push(1337).unwrap();
+        stack.push(Word::new_i64(0)).unwrap();
+        stack.push(Word::new_i64(1337)).unwrap();
 
         let err = div(&mut stack).unwrap_err();
 

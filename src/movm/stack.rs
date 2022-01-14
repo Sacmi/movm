@@ -108,21 +108,21 @@ mod tests {
         let stack = Stack::new();
 
         assert_eq!(stack.current_size, 0);
-        assert_eq!(stack.stack, [0; STACK_MAX_SIZE])
+        assert_eq!(stack.stack, [Word::zero(); STACK_MAX_SIZE])
     }
 
     #[test]
     fn push() {
         let mut stack = Stack::new();
 
-        stack.push(1).unwrap();
-        stack.push(-1).unwrap();
+        stack.push(Word::new_i64(1)).unwrap();
+        stack.push(Word::new_i64(-1)).unwrap();
 
         assert_eq!(stack.current_size, 2);
 
-        let mut arr: [Word; STACK_MAX_SIZE] = [0; STACK_MAX_SIZE];
-        arr[0] = 1;
-        arr[1] = -1;
+        let mut arr: [Word; STACK_MAX_SIZE] = [Word::zero(); STACK_MAX_SIZE];
+        arr[0] = Word::new_i64(1);
+        arr[1] = Word::new_i64(-1);
 
         assert_eq!(stack.stack, arr);
     }
@@ -131,13 +131,13 @@ mod tests {
     fn pop() {
         let mut stack = Stack::new();
 
-        stack.push(10).unwrap();
-        stack.push(20).unwrap();
+        stack.push(Word::new_i64(10)).unwrap();
+        stack.push(Word::new_i64(20)).unwrap();
 
-        assert_eq!(stack.pop().unwrap(), 20);
+        assert_eq!(stack.pop().unwrap().get_as_i64(), 20);
         assert_eq!(stack.current_size, 1);
 
-        assert_eq!(stack.pop().unwrap(), 10);
+        assert_eq!(stack.pop().unwrap().get_as_i64(), 10);
         assert_eq!(stack.current_size, 0)
     }
 
@@ -146,10 +146,10 @@ mod tests {
         let mut stack = Stack::new();
 
         for i in 0..STACK_MAX_SIZE {
-            stack.push(i as Word).unwrap();
+            stack.push(Word::new_u64(i as u64)).unwrap();
         }
 
-        let err = stack.push(1);
+        let err = stack.push(Word::new_i64(1));
         assert_eq!(
             err.unwrap_err(),
             StackError {
