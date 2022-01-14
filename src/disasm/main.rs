@@ -31,7 +31,12 @@ fn main() {
     for i in 0..program.len() {
         let inst = program[i];
 
-        print!("{:>space$} | \x1b[31m{}\x1b[0m", i, inst.typ.to_string().to_lowercase(), space = spaces);
+        print!(
+            "{:>space$} | \x1b[31m{}\x1b[0m",
+            i,
+            inst.typ.to_string().to_lowercase(),
+            space = spaces
+        );
 
         if inst.is_required_op() {
             print!(" \x1b[33m{}\x1b[0m", inst.op);

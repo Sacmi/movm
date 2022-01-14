@@ -1,4 +1,4 @@
-use crate::inst::{div, dump, dup, Inst, InstError, InstType, jmp, minus, mp, plus, push};
+use crate::inst::{div, dump, dup, jmp, minus, mp, plus, push, Inst, InstError, InstType};
 use crate::stack::{Stack, Word};
 
 pub struct VM {

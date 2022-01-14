@@ -1,4 +1,4 @@
-use std::fs::{File, metadata};
+use std::fs::{metadata, File};
 use std::io::{Read, Write};
 use std::mem::size_of;
 use std::slice::from_raw_parts;
