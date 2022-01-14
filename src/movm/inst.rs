@@ -69,7 +69,7 @@ impl fmt::Display for InstErrorKind {
     }
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Copy, Clone)]
 pub struct Inst {
     pub typ: InstType,
     pub op: Word,
@@ -100,10 +100,10 @@ pub fn push(stack: &mut Stack, op: Word) -> Result<(), InstError> {
 pub fn plus(stack: &mut Stack) -> Result<(), InstError> {
     check_operands!(stack, 2);
 
-    let a = stack.pop().unwrap();
-    let b = stack.pop().unwrap();
+    let a = stack.pop().unwrap().get_as_i64();
+    let b = stack.pop().unwrap().get_as_i64();
 
-    stack.push(a + b).unwrap();
+    stack.push(Word { as_i64: a + b }).unwrap();
 
     Ok(())
 }
@@ -111,10 +111,10 @@ pub fn plus(stack: &mut Stack) -> Result<(), InstError> {
 pub fn minus(stack: &mut Stack) -> Result<(), InstError> {
     check_operands!(stack, 2);
 
-    let a = stack.pop().unwrap();
-    let b = stack.pop().unwrap();
+    let a = stack.pop().unwrap().get_as_i64();
+    let b = stack.pop().unwrap().get_as_i64();
 
-    stack.push(a - b).unwrap();
+    stack.push(Word { as_i64: a - b }).unwrap();
 
     Ok(())
 }
@@ -122,10 +122,10 @@ pub fn minus(stack: &mut Stack) -> Result<(), InstError> {
 pub fn mp(stack: &mut Stack) -> Result<(), InstError> {
     check_operands!(stack, 2);
 
-    let a = stack.pop().unwrap();
-    let b = stack.pop().unwrap();
+    let a = stack.pop().unwrap().get_as_i64();
+    let b = stack.pop().unwrap().get_as_i64();
 
-    stack.push(a * b).unwrap();
+    stack.push(Word { as_i64: a + b }).unwrap();
 
     Ok(())
 }
@@ -133,8 +133,8 @@ pub fn mp(stack: &mut Stack) -> Result<(), InstError> {
 pub fn div(stack: &mut Stack) -> Result<(), InstError> {
     check_operands!(stack, 2);
 
-    let a = stack.pop().unwrap();
-    let b = stack.pop().unwrap();
+    let a = stack.pop().unwrap().get_as_i64();
+    let b = stack.pop().unwrap().get_as_i64();
 
     if b == 0 {
         return Err(InstError {
@@ -142,7 +142,7 @@ pub fn div(stack: &mut Stack) -> Result<(), InstError> {
         });
     }
 
-    stack.push(a / b).unwrap();
+    stack.push(Word { as_i64: a / b }).unwrap();
     Ok(())
 }
 
@@ -152,25 +152,27 @@ pub fn dump(stack: &mut Stack) -> Result<(), InstError> {
 }
 
 pub fn jmp(vm: &mut VM, op: Word) -> Result<(), InstError> {
-    if op > vm.get_program_length() as Word || op < 0 {
+    if op.get_as_u64() > vm.get_program_length() as u64 {
         return Err(InstError {
             kind: InstErrorKind::IllegalPointer,
         });
     }
 
-    vm.set_inst_pointer(op as usize);
+    vm.set_inst_pointer(op.get_as_u64() as usize);
 
     Ok(())
 }
 
 pub fn dup(stack: &mut Stack, op: Word) -> Result<(), InstError> {
-    if op >= stack.get_size() as Word || op < 0 {
+    if op.get_as_u64() >= stack.get_size() as u64 {
         return Err(InstError {
             kind: InstErrorKind::IndexOutOfRange,
         });
     }
 
-    let duplicate = stack.at(stack.get_size() - 1 - (op as usize)).unwrap();
+    let duplicate = stack
+        .at(stack.get_size() - 1 - (op.get_as_u64() as usize))
+        .unwrap();
     let res = stack.push(duplicate);
 
     if res.is_err() {

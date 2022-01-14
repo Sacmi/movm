@@ -38,8 +38,8 @@ fn main() {
             space = spaces
         );
 
-        if inst.is_required_op() {
-            print!(" \x1b[33m{}\x1b[0m", inst.op);
+        if inst.typ.is_required_op() {
+            print!(" \x1b[33m{}\x1b[0m", inst.op.get_as_u64());
         }
 
         println!()

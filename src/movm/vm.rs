@@ -45,7 +45,7 @@ impl VM {
         println!("\x1b[31m{}\x1b[0m: {}", err.kind, err);
         self.stack.dump();
         println!("\x1b[93mInstruction with error:\x1b[0m");
-        println!("{} |    {} {}", self.current_ip, typ, op);
+        println!("{} |    {} {}", self.current_ip, typ, op.get_as_u64());
     }
 
     fn exec_inst(&mut self, inst: &Inst) {

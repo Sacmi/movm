@@ -39,7 +39,7 @@ pub struct Stack {
 impl Stack {
     pub fn new() -> Stack {
         Stack {
-            stack: [0; STACK_MAX_SIZE],
+            stack: [Word { as_i64: 0 }; STACK_MAX_SIZE],
             current_size: 0,
         }
     }
@@ -82,7 +82,15 @@ impl Stack {
         println!("Dump of stack:");
 
         for i in 0..self.current_size {
-            println!(" - {} -> {}", i, self.stack[i])
+            let word = self.stack[i];
+
+            println!(
+                " - {} -> i64: {}, u64: {}, f64: {}",
+                i,
+                word.get_as_i64(),
+                word.get_as_u64(),
+                word.get_as_f64()
+            )
         }
     }
 
