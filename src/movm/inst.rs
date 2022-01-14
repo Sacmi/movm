@@ -48,6 +48,10 @@ pub enum InstType {
     DUMP,
     JMP,
     DUP,
+    PLUSF,
+    MINUSF,
+    MPF,
+    DIVF,
 }
 
 impl InstType {
@@ -203,6 +207,55 @@ pub fn dup(stack: &mut Stack, op: Word) -> Result<(), InstError> {
     } else {
         Ok(())
     }
+}
+
+pub fn plusf(stack: &mut Stack) -> Result<(), InstError> {
+    check_operands!(stack, 2);
+
+    let a = stack.pop().unwrap().get_as_f64();
+    let b = stack.pop().unwrap().get_as_f64();
+
+    stack.push(Word::new_f64(a + b)).unwrap();
+
+    Ok(())
+}
+
+pub fn minusf(stack: &mut Stack) -> Result<(), InstError> {
+    check_operands!(stack, 2);
+
+    let a = stack.pop().unwrap().get_as_f64();
+    let b = stack.pop().unwrap().get_as_f64();
+
+    stack.push(Word::new_f64(a - b)).unwrap();
+
+    Ok(())
+}
+
+pub fn mpf(stack: &mut Stack) -> Result<(), InstError> {
+    check_operands!(stack, 2);
+
+    let a = stack.pop().unwrap().get_as_f64();
+    let b = stack.pop().unwrap().get_as_f64();
+
+    stack.push(Word::new_f64(a * b)).unwrap();
+
+    Ok(())
+}
+
+pub fn divf(stack: &mut Stack) -> Result<(), InstError> {
+    check_operands!(stack, 2);
+
+    let a = stack.pop().unwrap().get_as_f64();
+    let b = stack.pop().unwrap().get_as_f64();
+
+    if b == 0.0 {
+        return Err(InstError {
+            kind: InstErrorKind::DivisionByZero,
+        });
+    }
+
+    stack.push(Word::new_f64(a / b)).unwrap();
+    Ok(())
 }
 
 #[cfg(test)]

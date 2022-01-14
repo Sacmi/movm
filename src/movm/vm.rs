@@ -1,4 +1,4 @@
-use crate::inst::{div, dump, dup, jmp, minus, mp, plus, push, Inst, InstError, InstType};
+use crate::inst::{div, dump, dup, jmp, minus, mp, plus, plusf, push, Inst, InstError, InstType};
 use crate::stack::Stack;
 use crate::word::Word;
 
@@ -53,36 +53,25 @@ impl VM {
             panic!("VM is halted");
         }
 
-        let res: Result<(), InstError>;
-
-        match inst.typ {
-            InstType::PUSH => {
-                res = push(&mut self.stack, inst.op);
-            }
-            InstType::PLUS => {
-                res = plus(&mut self.stack);
-            }
-            InstType::MINUS => {
-                res = minus(&mut self.stack);
-            }
-            InstType::MP => {
-                res = mp(&mut self.stack);
-            }
-            InstType::DIV => {
-                res = div(&mut self.stack);
-            }
-
-            InstType::DUMP => {
-                res = dump(&mut self.stack);
-            }
+        let res = match inst.typ {
+            InstType::PUSH => push(&mut self.stack, inst.op),
+            InstType::PLUS => plus(&mut self.stack),
+            InstType::MINUS => minus(&mut self.stack),
+            InstType::MP => mp(&mut self.stack),
+            InstType::DIV => div(&mut self.stack),
+            InstType::DUMP => dump(&mut self.stack),
+            InstType::DUP => dup(&mut self.stack, inst.op),
+            InstType::PLUSF => plusf(&mut self.stack),
+            InstType::MINUSF => plusf(&mut self.stack),
+            InstType::MPF => plusf(&mut self.stack),
+            InstType::DIVF => plusf(&mut self.stack),
             InstType::JMP => {
-                res = jmp(self, inst.op);
+                let res = jmp(self, inst.op);
                 self.current_ip -= 1;
+
+                res
             }
-            InstType::DUP => {
-                res = dup(&mut self.stack, inst.op);
-            }
-        }
+        };
 
         if let Err(err) = res {
             self.handle_error(err, &inst.typ, inst.op);
