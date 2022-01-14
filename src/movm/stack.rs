@@ -99,6 +99,12 @@ impl Stack {
     }
 }
 
+impl Default for Stack {
+    fn default() -> Self {
+        Stack::new()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
