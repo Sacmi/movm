@@ -1,3 +1,6 @@
+use std::fmt;
+use std::fmt::Formatter;
+
 #[derive(Copy, Clone)]
 pub union Word {
     as_i64: i64,
@@ -32,5 +35,27 @@ impl Word {
 
     pub fn get_as_f64(&self) -> f64 {
         unsafe { self.as_f64 }
+    }
+}
+
+impl PartialEq for Word {
+    fn eq(&self, other: &Self) -> bool {
+        unsafe { self.as_u64 == other.as_u64 }
+    }
+
+    fn ne(&self, other: &Self) -> bool {
+        unsafe { self.as_u64 != other.as_u64 }
+    }
+}
+
+impl fmt::Debug for Word {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        unsafe {
+            f.debug_struct("Word")
+                .field("i64", &self.as_i64)
+                .field("u64", &self.as_u64)
+                .field("f64", &self.as_f64)
+                .finish()
+        }
     }
 }
