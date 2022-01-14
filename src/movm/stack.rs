@@ -39,7 +39,7 @@ pub struct Stack {
 impl Stack {
     pub fn new() -> Stack {
         Stack {
-            stack: [Word { as_i64: 0 }; STACK_MAX_SIZE],
+            stack: [Word::zero(); STACK_MAX_SIZE],
             current_size: 0,
         }
     }

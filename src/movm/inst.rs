@@ -103,7 +103,7 @@ pub fn plus(stack: &mut Stack) -> Result<(), InstError> {
     let a = stack.pop().unwrap().get_as_i64();
     let b = stack.pop().unwrap().get_as_i64();
 
-    stack.push(Word { as_i64: a + b }).unwrap();
+    stack.push(Word::new_i64(a + b)).unwrap();
 
     Ok(())
 }
@@ -114,7 +114,7 @@ pub fn minus(stack: &mut Stack) -> Result<(), InstError> {
     let a = stack.pop().unwrap().get_as_i64();
     let b = stack.pop().unwrap().get_as_i64();
 
-    stack.push(Word { as_i64: a - b }).unwrap();
+    stack.push(Word::new_i64(a - b)).unwrap();
 
     Ok(())
 }
@@ -125,7 +125,7 @@ pub fn mp(stack: &mut Stack) -> Result<(), InstError> {
     let a = stack.pop().unwrap().get_as_i64();
     let b = stack.pop().unwrap().get_as_i64();
 
-    stack.push(Word { as_i64: a + b }).unwrap();
+    stack.push(Word::new_i64(a * b)).unwrap();
 
     Ok(())
 }
@@ -142,7 +142,7 @@ pub fn div(stack: &mut Stack) -> Result<(), InstError> {
         });
     }
 
-    stack.push(Word { as_i64: a / b }).unwrap();
+    stack.push(Word::new_i64(a / b)).unwrap();
     Ok(())
 }
 
